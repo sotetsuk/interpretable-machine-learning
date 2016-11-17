@@ -5,3 +5,15 @@ build:
         name: compile
         code: |-
           ./build.sh
+deploy:
+  steps:
+    - script:
+        name: remove_old_assets
+        code: |-
+          export OLD_ASSET=`curl -H "Authorization: token ${GITHUB_TOKEN}" https://api.github.com/repos/sotetsuk/interpretable-machine-learning-a-survey/releases | jq ".[] | .assets | map(select(.name==\"${WERCKER_GIT_BRANCH}.pdf\") | .id) | .[]"`
+          curl -H "Authorization: token ${GITHUB_TOKEN}" -X DELETE https://api.github.com/repos/sotetsuk/interpretable-machine-learning-a-survey/releases/assets/$OLD_ASSET
+    - github-upload-asset:
+        token: $GITHUB_TOKEN
+        file: main.pdf
+        filename: ${WERCKER_GIT_BRANCH}.pdf
+        release_id: 4683857
