@@ -1,0 +1,11 @@
+box: sotetsuk/platex
+build:
+  steps:
+    - script:
+        name: compile
+        code: |-
+          platex -interaction=nonstopmode -halt-on-error -shell-escape -kanji=utf8 main
+          bibtex main
+          platex -interaction=nonstopmode -halt-on-error -shell-escape -kanji=utf8 main
+          platex -interaction=nonstopmode -halt-on-error -shell-escape -kanji=utf8 main
+          dvipdfmx main
